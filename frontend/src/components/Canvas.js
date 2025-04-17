@@ -1,19 +1,53 @@
+// src/components/Canvas.js
 import React from "react";
 import { Droppable, Draggable } from "react-beautiful-dnd";
 import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
 
 export default function Canvas({ canvasBlocks }) {
-  const exportAsPDF = async () => {
-    const canvasEl = document.getElementById("canvas-area");
-    const blob = await html2canvas(canvasEl).then((canvas) =>
-      canvas.toDataURL("image/png")
-    );
+  const exportAsTextPDF = () => {
     const pdf = new jsPDF();
-    const imgProps = pdf.getImageProperties(blob);
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-    pdf.addImage(blob, "PNG", 0, 0, pdfWidth, pdfHeight);
+    const leftMargin = 10;
+    const topMargin = 20;
+    const lineHeight = 8;
+    const pageHeight = pdf.internal.pageSize.getHeight();
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    let y = topMargin;
+
+    canvasBlocks.forEach((block) => {
+      // 1) Block header (type)
+      pdf.setFontSize(14);
+      pdf.setFont(undefined, "bold");
+      pdf.text(block.type, leftMargin, y);
+      y += lineHeight;
+
+      // 2) Block content (wrapped)
+      pdf.setFontSize(12);
+      pdf.setFont(undefined, "normal");
+      // splitTextToSize wraps long text to page width minus margins
+      const wrapped = pdf.splitTextToSize(
+        block.content,
+        pageWidth - leftMargin * 2
+      );
+      wrapped.forEach((line) => {
+        // new page if needed
+        if (y > pageHeight - topMargin) {
+          pdf.addPage();
+          y = topMargin;
+        }
+        pdf.text(line, leftMargin, y);
+        y += lineHeight;
+      });
+
+      // 3) Spacer between blocks
+      y += lineHeight;
+
+      // page break if spacer pushes past bottom
+      if (y > pageHeight - topMargin) {
+        pdf.addPage();
+        y = topMargin;
+      }
+    });
+
     pdf.save("resume.pdf");
   };
 
@@ -59,7 +93,7 @@ export default function Canvas({ canvasBlocks }) {
         )}
       </Droppable>
 
-      <button style={{ marginTop: "1rem" }} onClick={exportAsPDF}>
+      <button style={{ marginTop: "1rem" }} onClick={exportAsTextPDF}>
         Export Canvas to PDF
       </button>
     </div>
