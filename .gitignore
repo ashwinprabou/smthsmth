@@ -1,0 +1,89 @@
+# ===== Global =====
+# macOS
+.DS_Store
+
+# Logs
+*.log
+
+# Environment variables
+.env
+.env.*.local
+.env.local
+
+# ===== Backend (Python/FastAPI) =====
+# Virtualenv
+venv/
+env/
+.venv/
+
+# Byte‑compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# SQLite DB
+resume.db
+
+# pdfminer temp files (if any)
+*.pdf
+
+# Python packaging
+*.egg-info/
+dist/
+build/
+
+# Uvicorn reload
+*.reload
+
+# ===== Frontend (Next.js/Tailwind) =====
+# Node modules
+frontend/node_modules/
+
+# Next.js build output
+frontend/.next/
+frontend/out/
+
+# Production build
+/frontend/build/
+
+# Static exports
+frontend/dist/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDE/editor folders
+.vscode/
+.idea/
+
+# Optional npm cache
+npm-cache/
+.pnpm-debug.log
+
+# coverage
+coverage/
+*.lcov
+
+# Mac/Linux swap files
+*~
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Typescript
+*.tsbuildinfo
+
+# Tailwind JIT
+tailwind.config.js
+
+# Storybook
+storybook-static/
+
+# Yarn v2
+.yarn/*
+.pnp.*
+
+# Optional: if you use Docker
+docker-compose.override.yml
